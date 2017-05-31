@@ -1,0 +1,132 @@
+FORMAT: 1A
+
+# TempAlert Server API
+
+API for communication between TempAlert Client and the monitoring server.
+
+## Group Client-server communication
+
+## Registration with server [/register]
+
+### Register [POST]
+
+Register a client instance with the server.
+
+- hostname (string) - The client hostname
+- clientver (string) - Client software version
+- deviceId (!string) - Unique client ID given by server, if the client has previously registered
+- env (string) - Client OS environment
+
++ Request (application/json)
+
+    {
+        "hostname": "DEVICE-HOSTNAME",
+        "clientVer" : "1.0",
+        "deviceId": "NULL",
+        "env": "Windows 10"
+    }
+
++ Response 201 (application/json)
+
+    {
+        "status": "new client",
+        "configVer": "1.0",
+        "deviceId": "b49a818c-c94c-48bd-99aa-6b163ba652ab",
+        "config": {
+            "maxTempThreshold": 75,
+            "criticalTempThreshold": 90,
+            "alerting": true
+            }
+        "serverName": "Core Monitoring Server",
+        "organisationName": "Consoto IT Services"
+    }
+        
+
+## Update [/update]
+
+### Send readings [POST]
+
+Send latest readings to server as JSON.
+
+- deviceId (string) - Unique client ID
+- readings (deviceReading[]) - array of device readings
+    - deviceType (string) - type of device
+    - deviceName (string) - name of device
+    - temperatures (sensorReading[]) - readings from sensors
+        - sensorName (string) - sensor name
+        - value (float) - sensor value in Celcius
+
++ Request (application/json)
+
+    {
+        "deviceId": "b49a818c...",
+        "readings": [
+            {
+                "deviceType": "CPU",
+                "deviceName": "Intel i7-5820k",
+                "temperatures": [
+                    {
+                        "sensorName": "core 0",
+                        "value": 37.1
+                    },
+                    {
+                        "sensorName": "core 1",
+                        "value": 38.2
+                    }
+                ]
+            },
+            {
+                "deviceType": "GPU",
+                "deviceName": "AMD RX480",
+                "temperatures": [
+                    {
+                        "sensorName": "core",
+                        "value": 52.5
+                    }
+                ]
+            },
+            {
+                "deviceType": "HDD",
+                "deviceName": "Crucial MX2332",
+                "temperatures": [
+                    {
+                        "sensorName": "temp",
+                        "value": 24.4
+                    }
+                ]
+            }
+        ]
+    }
+
++ Response 201 (application/json)
+
+    {
+        "status": "ok"
+    }
+
+## Alert [/alert]
+
+### Send alert [POST]
+
+Send a request to the monitoring server to log an alerting state on the client. This will also trigger
+a notification email to be sent to the administrator if that is configured on the server.
+
++ deviceId (string) - Unique client ID
++ alertLevel (string) - Level of alert
++ alertingComponent (string) - name of component that has reached the alerting threshold
++ alertingTemp (float) - temperature in Celcius of alerting component
+
++ Request (application/json)
+
+    {
+        "deviceId": "b49a818c....",
+        "alertLevel": "Critical",
+        "alertingComponent": "CPU",
+        "alertingTemp": 83.4
+    }
+
++ Response 201 (application/json)
+
+    {
+        "status": "ok",
+    }
