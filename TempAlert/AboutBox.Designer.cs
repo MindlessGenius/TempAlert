@@ -1,4 +1,4 @@
-﻿namespace TempAlert
+﻿namespace TempAlert.Client
 {
     partial class AboutBox
     {

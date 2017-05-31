@@ -6,15 +6,16 @@ using System.Text;
 using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
 
-namespace TempAlert
+namespace TempAlert.Client
 {
     public partial class MainForm : Form
     {
         private Computer computer = new Computer();
-        private float maxTempThreshold = 50;
         private float currentMaxTemp = 0;
         private DateTime nextAlert = DateTime.UtcNow;
         private bool alerting = true;
+        private ConfigSet config;
+
         public MainForm()
         {
             InitializeComponent();
@@ -31,6 +32,9 @@ namespace TempAlert
 
             updateTimer.Tick += UpdateTemps_Tick;
             updateTimer.Enabled = true;
+
+            config = new ConfigSet();
+
         }
 
         private void UpdateTemps_Tick(object sender, EventArgs e)
@@ -83,7 +87,7 @@ namespace TempAlert
                 return;
             }
 
-            if (currentMaxTemp > maxTempThreshold)
+            if (currentMaxTemp > config.UpperThreshold)
             {
                 HighTemperatureAlert(currentMaxTemp);
             }
@@ -103,11 +107,11 @@ namespace TempAlert
             {
                 this.Hide();
                 e.Cancel = true;
-                notifyIcon.ShowBalloonTip(10000, "TempAlert is still running", "TempAlert is continuing to monitor your computer in the background.", ToolTipIcon.Info);
+                notifyIcon.ShowBalloonTip(0, "TempAlert is still running", "TempAlert is continuing to monitor your computer in the background.", ToolTipIcon.Info);
             }
         }
 
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void QuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to quit? This will stop monitoring.", "Quit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -115,7 +119,7 @@ namespace TempAlert
             }
         }
 
-        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        private void NotifyIcon_DoubleClick(object sender, EventArgs e)
         {
             this.Show();
         }
@@ -123,6 +127,36 @@ namespace TempAlert
         private void MainForm_FormClosing(object sender, EventArgs e)
         {
             notifyIcon.Dispose();
+        }
+
+        private void MinsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            nextAlert = DateTime.UtcNow + TimeSpan.FromMinutes(10);
+        }
+
+        private void Snooze1hrToolStrip_Click(object sender, EventArgs e)
+        {
+            nextAlert = DateTime.UtcNow + TimeSpan.FromHours(1);
+        }
+
+        private void SnoozeTillRebootToolStrip_Click(object sender, EventArgs e)
+        {
+            alerting = false;
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutBox().ShowDialog();
+        }
+
+        private void ShowCurrentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ShowConfig(config).ShowDialog();
+        }
+
+        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            config.Reload();
         }
     }
 }

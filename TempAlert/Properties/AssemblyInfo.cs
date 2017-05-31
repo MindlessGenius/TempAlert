@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TempAlert")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("TempAlert Client")]
+[assembly: AssemblyDescription("Client software for use with the TempAlert system temperature monitoring system.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Robert Phipps")]
 [assembly: AssemblyProduct("TempAlert")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © Robert Phipps 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

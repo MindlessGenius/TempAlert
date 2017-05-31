@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempAlert", "TempAlert\TempAlert.csproj", "{E522E376-AD1B-4ED8-8B02-BFA939668078}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempAlert.Client", "TempAlert\TempAlert.Client.csproj", "{E522E376-AD1B-4ED8-8B02-BFA939668078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
